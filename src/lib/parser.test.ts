@@ -89,6 +89,26 @@ describe('parseMessage - รูปแบบหลัก', () => {
   });
 });
 
+describe('parseMessage - พิมพ์ชื่อแบบย่อ (ตัด "ร์")', () => {
+  it('"เฟิส" (ไม่มี ร์) -> รู้จักเป็น "เฟิร์ส"', () => {
+    const entry = expectOk(parseMessage('เฟิส จ่าย ส้มตำ 60', ctx()));
+    expect(entry.payer).toBe('b');
+    expect(entry.description).toBe('ส้มตำ');
+  });
+
+  it('พิมพ์ชื่อแบบย่อใน "โอนให้" ได้ทั้งฝั่งผู้โอนและผู้รับ', () => {
+    const entry = expectOk(parseMessage('เฟิส โอนให้ เตย 500', ctx()));
+    expect(entry.payer).toBe('b');
+    expect(entry.splitType).toBe('settlement');
+  });
+
+  it('พิมพ์ชื่อแบบย่อใน "เคลียร์" ได้', () => {
+    const entry = expectOk(parseMessage('เฟิส เคลียร์ 500', ctx()));
+    expect(entry.payer).toBe('b');
+    expect(entry.splitType).toBe('settlement');
+  });
+});
+
 describe('parseMessage - รูปแบบจำนวนเงิน', () => {
   it.each([
     ['เตย จ่าย ของ 60', 6000],

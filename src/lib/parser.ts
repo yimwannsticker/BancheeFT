@@ -33,11 +33,16 @@ function detectCategory(description: string): Category {
   return 'อื่นๆ';
 }
 
+/** ตัด "ร์" (ตัวการันต์ที่มักไม่ออกเสียง) ออก เพื่อให้พิมพ์แบบย่อได้ เช่น "เฟิร์ส" -> "เฟิส" */
+function normalizeName(value: string): string {
+  return value.replace(/ร์/g, '');
+}
+
 function resolveName(token: string, names: RoomNames): PersonKey | null {
   const clean = token.replace(/[,:：、]/g, '').trim();
   if (!clean) return null;
-  if (clean === names.a) return 'a';
-  if (clean === names.b) return 'b';
+  if (clean === names.a || normalizeName(clean) === normalizeName(names.a)) return 'a';
+  if (clean === names.b || normalizeName(clean) === normalizeName(names.b)) return 'b';
   return null;
 }
 
