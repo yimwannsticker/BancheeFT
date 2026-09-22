@@ -72,12 +72,12 @@ export function SummaryPage() {
 
       <div className="mt-4 rounded-2xl bg-white p-5 text-center shadow-sm">
         <p className="text-xs text-gray-400">ยอดค้างสะสม (รวมเดือนก่อนหน้าที่ยังไม่เคลียร์)</p>
-        <p className="mt-2 text-lg font-bold text-brand-600">{balanceSentence(netBalance, names)}</p>
+        <p className="mt-2 text-lg font-bold text-[var(--brand-600)]">{balanceSentence(netBalance, names)}</p>
         {sender && (
           <button
             onClick={handleSettle}
             disabled={settling}
-            className="mt-4 rounded-full bg-brand-500 px-5 py-2 text-sm font-semibold text-white active:scale-95 disabled:opacity-50"
+            className="mt-4 rounded-full bg-[var(--brand-500)] px-5 py-2 text-sm font-semibold text-[var(--brand-contrast)] active:scale-95 disabled:opacity-50"
           >
             {settling ? 'กำลังบันทึก...' : `เคลียร์ยอด (บันทึกว่า${names[sender]}โอนแล้ว)`}
           </button>

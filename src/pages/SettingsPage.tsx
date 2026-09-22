@@ -57,7 +57,7 @@ export function SettingsPage() {
         <button
           onClick={save}
           disabled={!dirty || saving}
-          className="mt-3 w-full rounded-lg bg-brand-500 py-2 text-sm font-semibold text-white disabled:opacity-40"
+          className="mt-3 w-full rounded-lg bg-[var(--brand-500)] py-2 text-sm font-semibold text-[var(--brand-contrast)] disabled:opacity-40"
         >
           {saved ? 'บันทึกแล้ว ✓' : saving ? 'กำลังบันทึก...' : 'บันทึกชื่อ'}
         </button>

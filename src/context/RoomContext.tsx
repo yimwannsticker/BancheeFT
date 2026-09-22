@@ -55,6 +55,12 @@ export function RoomProvider({
     return unsubscribe;
   }, [roomId, refresh]);
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', selfKey);
+    const themeColor = selfKey === 'a' ? '#eab308' : '#9333ea';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColor);
+  }, [selfKey]);
+
   const addEntry = useCallback(
     async (draft: DraftEntry) => {
       const entry = await api.insertEntry(roomId, draft);

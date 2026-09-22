@@ -9,3 +9,24 @@ html, body, #root {
 body {
   overscroll-behavior-y: none;
 }
+
+/* ธีมสีของทั้งเว็บ สลับตามตัวตนที่เลือก (data-theme บน <html>)
+   ค่าเริ่มต้น (ยังไม่เลือกตัวตน) = ม่วง, "a" (เตย) = เหลืองสดใส, "b" (เฟิร์ส) = ม่วง */
+:root,
+[data-theme='b'] {
+  --brand-50: #faf5ff;
+  --brand-100: #f3e8ff;
+  --brand-400: #c084fc;
+  --brand-500: #a855f7;
+  --brand-600: #9333ea;
+  --brand-contrast: #ffffff;
+}
+
+[data-theme='a'] {
+  --brand-50: #fefce8;
+  --brand-100: #fef9c3;
+  --brand-400: #facc15;
+  --brand-500: #eab308;
+  --brand-600: #a16207;
+  --brand-contrast: #422006;
+}

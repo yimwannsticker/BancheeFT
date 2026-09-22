@@ -103,10 +103,10 @@ export function TablePage() {
                     </p>
                     <p className="text-xs text-gray-400">{entry.category}</p>
                   </div>
-                  <p className="font-semibold text-brand-600">{formatBaht(entry.amountSatang)} ฿</p>
+                  <p className="font-semibold text-[var(--brand-600)]">{formatBaht(entry.amountSatang)} ฿</p>
                 </div>
                 <div className="mt-2 flex gap-3 text-xs">
-                  <button onClick={() => setEditingId(entry.id)} className="text-brand-600 underline">
+                  <button onClick={() => setEditingId(entry.id)} className="text-[var(--brand-600)] underline">
                     แก้ไข
                   </button>
                   <button onClick={() => deleteEntry(entry.id)} className="text-red-500 underline">

@@ -53,7 +53,7 @@ export default function App() {
 
   if (phase === 'loading') {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-brand-50 text-gray-500">
+      <div className="flex min-h-screen items-center justify-center bg-[var(--brand-50)] text-gray-500">
         กำลังโหลด...
       </div>
     );
@@ -61,7 +61,7 @@ export default function App() {
 
   if (phase === 'error') {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-brand-50 p-6 text-center">
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[var(--brand-50)] p-6 text-center">
         <p className="font-semibold text-red-600">เชื่อมต่อไม่สำเร็จ</p>
         <p className="text-sm text-gray-500">{errorMessage}</p>
         <p className="text-xs text-gray-400">

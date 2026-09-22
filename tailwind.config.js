@@ -4,13 +4,6 @@ export default {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#faf5ff',
-          100: '#f3e8ff',
-          400: '#c084fc',
-          500: '#a855f7',
-          600: '#9333ea',
-        },
         person: {
           a: {
             50: '#fefce8',

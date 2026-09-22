@@ -112,20 +112,20 @@ export function ChatPage() {
             <p className="mb-2 font-semibold text-gray-600">พิมพ์รายการแรกได้เลย ตัวอย่างคำสั่ง</p>
             <ul className="space-y-2">
               <li>
-                <span className="font-mono text-brand-600">"ส้มตำ 60"</span> → หารครึ่งคนละ 30 (ไม่ระบุชื่อ = ตัวเอง)
+                <span className="font-mono text-[var(--brand-600)]">"ส้มตำ 60"</span> → หารครึ่งคนละ 30 (ไม่ระบุชื่อ = ตัวเอง)
               </li>
               <li>
-                <span className="font-mono text-brand-600">"เตย จ่าย แท็กซี่ 120 แทน"</span> → เฟิร์สติดเตยเต็ม 120 (จ่ายแทนทั้งหมด)
+                <span className="font-mono text-[var(--brand-600)]">"เตย จ่าย แท็กซี่ 120 แทน"</span> → เฟิร์สติดเตยเต็ม 120 (จ่ายแทนทั้งหมด)
               </li>
               <li>
-                <span className="font-mono text-brand-600">"เตย จ่าย เสื้อ 500 ส่วนตัว"</span> → บันทึกไว้เฉยๆ ไม่นำไปคิดยอด
+                <span className="font-mono text-[var(--brand-600)]">"เตย จ่าย เสื้อ 500 ส่วนตัว"</span> → บันทึกไว้เฉยๆ ไม่นำไปคิดยอด
               </li>
               <li>
-                <span className="font-mono text-brand-600">"เฟิร์ส โอนให้ เตย 500"</span> หรือ{' '}
-                <span className="font-mono text-brand-600">"เฟิร์ส เคลียร์ 500"</span> → บันทึกว่าโอนเงินคืนแล้ว
+                <span className="font-mono text-[var(--brand-600)]">"เฟิร์ส โอนให้ เตย 500"</span> หรือ{' '}
+                <span className="font-mono text-[var(--brand-600)]">"เฟิร์ส เคลียร์ 500"</span> → บันทึกว่าโอนเงินคืนแล้ว
               </li>
               <li>
-                เติมคำว่า <span className="font-mono text-brand-600">"เมื่อวาน"</span> ต่อท้ายได้ ถ้าลืมบันทึกของเมื่อวาน
+                เติมคำว่า <span className="font-mono text-[var(--brand-600)]">"เมื่อวาน"</span> ต่อท้ายได้ ถ้าลืมบันทึกของเมื่อวาน
               </li>
             </ul>
           </div>
@@ -154,12 +154,12 @@ export function ChatPage() {
               if (e.key === 'Enter') handleSend();
             }}
             placeholder='พิมพ์ เช่น "ส้มตำ 60"'
-            className="flex-1 rounded-full border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-400 focus:outline-none"
+            className="flex-1 rounded-full border border-gray-200 px-4 py-2.5 text-sm focus:border-[var(--brand-400)] focus:outline-none"
           />
           <button
             onClick={handleSend}
             disabled={sending || !input.trim()}
-            className="rounded-full bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
+            className="rounded-full bg-[var(--brand-500)] px-4 py-2.5 text-sm font-semibold text-[var(--brand-contrast)] disabled:opacity-40"
           >
             ส่ง
           </button>

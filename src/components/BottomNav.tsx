@@ -15,7 +15,7 @@ export function BottomNav({ active, onChange }: { active: TabKey; onChange: (tab
           key={tab.key}
           onClick={() => onChange(tab.key)}
           className={`flex flex-col items-center gap-0.5 py-2 text-xs ${
-            active === tab.key ? 'text-brand-600 font-semibold' : 'text-gray-400'
+            active === tab.key ? 'text-[var(--brand-600)] font-semibold' : 'text-gray-400'
           }`}
         >
           <span className="text-lg leading-none">{tab.icon}</span>

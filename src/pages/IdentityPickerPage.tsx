@@ -8,9 +8,9 @@ export function IdentityPickerPage({
   onPick: (key: PersonKey) => void;
 }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-brand-50 p-6 text-center">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-[var(--brand-50)] p-6 text-center">
       <div>
-        <h1 className="text-2xl font-bold text-brand-600">ยินดีต้อนรับเข้าสู่เว็บจัดการบัญชีเฟิร์สเตย</h1>
+        <h1 className="text-2xl font-bold text-[var(--brand-600)]">ยินดีต้อนรับเข้าสู่เว็บจัดการบัญชีเฟิร์สเตย</h1>
         <p className="mt-2 text-gray-600">เครื่องนี้เป็นของใคร?</p>
       </div>
       <div className="flex w-full max-w-xs flex-col gap-3">

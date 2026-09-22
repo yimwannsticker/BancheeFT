@@ -106,7 +106,9 @@ export function EntryEditForm({
             key={s.value}
             onClick={() => setSplitType(s.value)}
             className={`rounded-lg border px-2 py-1.5 text-xs ${
-              splitType === s.value ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500'
+              splitType === s.value
+                ? 'border-[var(--brand-500)] bg-[var(--brand-50)] text-[var(--brand-600)]'
+                : 'border-gray-200 text-gray-500'
             }`}
           >
             {s.label}
@@ -115,7 +117,10 @@ export function EntryEditForm({
       </div>
 
       <div className="flex gap-2 pt-1">
-        <button onClick={submit} className="flex-1 rounded-lg bg-brand-500 py-2 text-sm font-semibold text-white">
+        <button
+          onClick={submit}
+          className="flex-1 rounded-lg bg-[var(--brand-500)] py-2 text-sm font-semibold text-[var(--brand-contrast)]"
+        >
           บันทึก
         </button>
         <button onClick={onCancel} className="flex-1 rounded-lg bg-gray-100 py-2 text-sm text-gray-500">

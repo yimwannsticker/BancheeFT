@@ -13,7 +13,7 @@ export function MainApp({ showShareBannerInitially }: { showShareBannerInitially
   const [showBanner, setShowBanner] = useState(showShareBannerInitially);
 
   return (
-    <div className="flex h-screen flex-col bg-brand-50">
+    <div className="flex h-screen flex-col bg-[var(--brand-50)]">
       {showBanner && <ShareLinkBanner roomId={roomId} onDismiss={() => setShowBanner(false)} />}
       <div className="min-h-0 flex-1">
         {tab === 'chat' && <ChatPage />}
