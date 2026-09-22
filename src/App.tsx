@@ -38,7 +38,14 @@ export default function App() {
           setPhase('pick-identity');
         }
       } catch (err) {
-        setErrorMessage(err instanceof Error ? err.message : 'เชื่อมต่อไม่สำเร็จ');
+        console.error('เชื่อมต่อ Supabase ไม่สำเร็จ:', err);
+        let message = 'เชื่อมต่อไม่สำเร็จ (ไม่ทราบสาเหตุ)';
+        if (typeof err === 'string') {
+          message = err;
+        } else if (err && typeof err === 'object' && 'message' in err && typeof (err as { message: unknown }).message === 'string') {
+          message = (err as { message: string }).message;
+        }
+        setErrorMessage(message);
         setPhase('error');
       }
     })();
@@ -60,6 +67,13 @@ export default function App() {
         <p className="text-xs text-gray-400">
           ตรวจสอบว่าตั้งค่า VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY ถูกต้องหรือยัง (ดู README.md)
         </p>
+        <div className="mt-2 rounded-lg bg-gray-100 p-3 text-left text-xs text-gray-500">
+          <p>VITE_SUPABASE_URL = {JSON.stringify(import.meta.env.VITE_SUPABASE_URL)}</p>
+          <p>
+            VITE_SUPABASE_ANON_KEY ยาว {import.meta.env.VITE_SUPABASE_ANON_KEY?.length ?? 0} ตัวอักษร
+            {import.meta.env.VITE_SUPABASE_ANON_KEY ? ` (ขึ้นต้นด้วย "${import.meta.env.VITE_SUPABASE_ANON_KEY.slice(0, 12)}...")` : ''}
+          </p>
+        </div>
       </div>
     );
   }
