@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['icons/icon-192.png', 'icons/icon-512.png'],
       manifest: {
-        name: 'บัญชีคู่รัก',
-        short_name: 'บัญชีคู่รัก',
+        name: 'BancheeFirstTeui',
+        short_name: 'BancheeFirstTeui',
         description: 'บันทึกว่าใครจ่ายอะไรแทนกัน และสรุปยอดปลายเดือน',
         theme_color: '#ec4899',
         background_color: '#fdf2f8',
