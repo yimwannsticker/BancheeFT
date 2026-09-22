@@ -8,18 +8,6 @@ import { MainApp } from './MainApp';
 
 type Phase = 'loading' | 'error' | 'pick-identity' | 'ready';
 
-function findNonLatin1Chars(value: string | undefined): string {
-  if (!value) return '';
-  const bad: string[] = [];
-  for (let i = 0; i < value.length; i++) {
-    const code = value.charCodeAt(i);
-    if (code > 255) {
-      bad.push(`ตำแหน่งที่ ${i + 1}: "${value[i]}" (U+${code.toString(16).toUpperCase().padStart(4, '0')})`);
-    }
-  }
-  return bad.join(', ');
-}
-
 export default function App() {
   const [phase, setPhase] = useState<Phase>('loading');
   const [roomId, setRoomId] = useState<string | null>(null);
@@ -79,23 +67,6 @@ export default function App() {
         <p className="text-xs text-gray-400">
           ตรวจสอบว่าตั้งค่า VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY ถูกต้องหรือยัง (ดู README.md)
         </p>
-        <div className="mt-2 rounded-lg bg-gray-100 p-3 text-left text-xs text-gray-500">
-          <p>VITE_SUPABASE_URL = {JSON.stringify(import.meta.env.VITE_SUPABASE_URL)}</p>
-          <p>
-            VITE_SUPABASE_ANON_KEY ยาว {import.meta.env.VITE_SUPABASE_ANON_KEY?.length ?? 0} ตัวอักษร
-            {import.meta.env.VITE_SUPABASE_ANON_KEY ? ` (ขึ้นต้นด้วย "${import.meta.env.VITE_SUPABASE_ANON_KEY.slice(0, 12)}...")` : ''}
-          </p>
-          {findNonLatin1Chars(import.meta.env.VITE_SUPABASE_URL) && (
-            <p className="mt-1 text-red-600">
-              พบอักขระผิดปกติใน URL: {findNonLatin1Chars(import.meta.env.VITE_SUPABASE_URL)}
-            </p>
-          )}
-          {findNonLatin1Chars(import.meta.env.VITE_SUPABASE_ANON_KEY) && (
-            <p className="mt-1 text-red-600">
-              พบอักขระผิดปกติใน ANON_KEY: {findNonLatin1Chars(import.meta.env.VITE_SUPABASE_ANON_KEY)}
-            </p>
-          )}
-        </div>
       </div>
     );
   }
