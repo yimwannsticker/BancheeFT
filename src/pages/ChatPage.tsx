@@ -76,7 +76,7 @@ export function ChatPage() {
       <div key={entry.id} className={`mb-3 flex flex-col ${isSelf ? 'items-end' : 'items-start'}`}>
         <div
           className={`max-w-[85%] rounded-2xl px-4 py-2 text-sm shadow-sm ${
-            isSelf ? 'bg-brand-500 text-white' : 'bg-white text-gray-700'
+            entry.payer === 'a' ? 'bg-person-a-400 text-person-a-900' : 'bg-person-b-500 text-white'
           }`}
         >
           {formatEntryLine(entry, names)}

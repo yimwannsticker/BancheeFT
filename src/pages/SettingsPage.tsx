@@ -71,7 +71,11 @@ export function SettingsPage() {
               key={key}
               onClick={() => switchIdentity(key)}
               className={`flex-1 rounded-lg border px-3 py-2 text-sm ${
-                selfKey === key ? 'border-brand-500 bg-brand-50 text-brand-600 font-semibold' : 'border-gray-200 text-gray-500'
+                selfKey === key
+                  ? key === 'a'
+                    ? 'border-person-a-500 bg-person-a-50 text-person-a-700 font-semibold'
+                    : 'border-person-b-500 bg-person-b-50 text-person-b-700 font-semibold'
+                  : 'border-gray-200 text-gray-500'
               }`}
             >
               ฉันคือ {names[key]}

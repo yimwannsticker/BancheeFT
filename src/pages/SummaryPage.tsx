@@ -85,13 +85,13 @@ export function SummaryPage() {
       </div>
 
       <div className="mt-4 grid grid-cols-2 gap-3">
-        <div className="rounded-xl bg-white p-4 shadow-sm">
+        <div className="rounded-xl border-l-4 border-person-a-400 bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-400">{names.a} จ่ายรวม</p>
-          <p className="mt-1 text-lg font-semibold text-gray-700">{formatBaht(summary.totalPaidSatang.a)} ฿</p>
+          <p className="mt-1 text-lg font-semibold text-person-a-700">{formatBaht(summary.totalPaidSatang.a)} ฿</p>
         </div>
-        <div className="rounded-xl bg-white p-4 shadow-sm">
+        <div className="rounded-xl border-l-4 border-person-b-400 bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-400">{names.b} จ่ายรวม</p>
-          <p className="mt-1 text-lg font-semibold text-gray-700">{formatBaht(summary.totalPaidSatang.b)} ฿</p>
+          <p className="mt-1 text-lg font-semibold text-person-b-700">{formatBaht(summary.totalPaidSatang.b)} ฿</p>
         </div>
         <div className="col-span-2 rounded-xl bg-white p-4 shadow-sm">
           <p className="text-xs text-gray-400">ค่าใช้จ่ายร่วม (หารครึ่ง + จ่ายเต็มแทน) เดือนนี้</p>

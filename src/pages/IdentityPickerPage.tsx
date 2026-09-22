@@ -18,7 +18,11 @@ export function IdentityPickerPage({
           <button
             key={key}
             onClick={() => onPick(key)}
-            className="rounded-2xl bg-white px-6 py-4 text-lg font-semibold text-brand-600 shadow shadow-brand-100 active:scale-95"
+            className={`rounded-2xl border-2 bg-white px-6 py-4 text-lg font-semibold shadow active:scale-95 ${
+              key === 'a'
+                ? 'border-person-a-400 text-person-a-700 shadow-person-a-100'
+                : 'border-person-b-400 text-person-b-700 shadow-person-b-100'
+            }`}
           >
             ฉันคือ {names[key]}
           </button>

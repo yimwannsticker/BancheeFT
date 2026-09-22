@@ -53,7 +53,11 @@ export function EntryEditForm({
             key={key}
             onClick={() => setPayer(key)}
             className={`flex-1 rounded-lg border px-2 py-1.5 text-sm ${
-              payer === key ? 'border-brand-500 bg-brand-50 text-brand-600' : 'border-gray-200 text-gray-500'
+              payer === key
+                ? key === 'a'
+                  ? 'border-person-a-500 bg-person-a-50 text-person-a-700'
+                  : 'border-person-b-500 bg-person-b-50 text-person-b-700'
+                : 'border-gray-200 text-gray-500'
             }`}
           >
             {names[key]}

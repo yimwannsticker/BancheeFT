@@ -96,7 +96,10 @@ export function TablePage() {
                 <div className="mt-1 flex items-center justify-between">
                   <div>
                     <p className="font-medium text-gray-800">
-                      {names[entry.payer]} · {entry.description}
+                      <span className={entry.payer === 'a' ? 'text-person-a-700' : 'text-person-b-700'}>
+                        {names[entry.payer]}
+                      </span>{' '}
+                      · {entry.description}
                     </p>
                     <p className="text-xs text-gray-400">{entry.category}</p>
                   </div>

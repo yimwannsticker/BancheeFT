@@ -12,8 +12,8 @@ export default defineConfig({
         name: 'BancheeFirstTeui',
         short_name: 'BancheeFirstTeui',
         description: 'บันทึกว่าใครจ่ายอะไรแทนกัน และสรุปยอดปลายเดือน',
-        theme_color: '#ec4899',
-        background_color: '#fdf2f8',
+        theme_color: '#9333ea',
+        background_color: '#faf5ff',
         display: 'standalone',
         start_url: '/',
         icons: [
