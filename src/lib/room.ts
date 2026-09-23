@@ -24,6 +24,26 @@ export function roomShareUrl(roomId: string): string {
   return url.toString();
 }
 
+const LAST_ROOM_KEY = 'bancheeft:lastRoomId';
+
+/** ห้องล่าสุดที่เครื่องนี้เคยเข้า ใช้ตอนเปิดแอพผ่านไอคอนที่ติดตั้งไว้ (ไม่มี ?room= ต่อท้าย)
+ * จะได้กลับเข้าห้องเดิมแทนที่จะสร้างห้องใหม่ทุกครั้ง */
+export function getLastRoomId(): string | null {
+  try {
+    return window.localStorage.getItem(LAST_ROOM_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setLastRoomId(roomId: string): void {
+  try {
+    window.localStorage.setItem(LAST_ROOM_KEY, roomId);
+  } catch {
+    // ไม่สามารถบันทึกได้ (เช่น private mode) — ไม่ร้ายแรง
+  }
+}
+
 function identityStorageKey(roomId: string): string {
   return `bancheeft:identity:${roomId}`;
 }

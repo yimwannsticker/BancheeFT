@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { PersonKey, RoomNames } from './types';
 import { getOrCreateRoom } from './lib/api';
-import { generateRoomId, getRoomIdFromUrl, setRoomIdInUrl } from './lib/room';
+import { generateRoomId, getLastRoomId, getRoomIdFromUrl, setLastRoomId, setRoomIdInUrl } from './lib/room';
 import { RoomProvider, loadStoredIdentity } from './context/RoomContext';
 import { IdentityPickerPage } from './pages/IdentityPickerPage';
 import { MainApp } from './MainApp';
@@ -20,11 +20,20 @@ export default function App() {
     (async () => {
       try {
         let id = getRoomIdFromUrl();
-        const freshlyCreated = !id;
+        let freshlyCreated = false;
         if (!id) {
-          id = generateRoomId();
+          // เปิดแอพโดยไม่มี ?room= ต่อท้าย (เช่น เปิดผ่านไอคอนที่ติดตั้งไว้)
+          // ให้กลับเข้าห้องล่าสุดที่เครื่องนี้เคยเข้าก่อน แทนที่จะสร้างห้องใหม่ทุกครั้ง
+          const resumed = getLastRoomId();
+          if (resumed) {
+            id = resumed;
+          } else {
+            id = generateRoomId();
+            freshlyCreated = true;
+          }
           setRoomIdInUrl(id);
         }
+        setLastRoomId(id);
         const roomNames = await getOrCreateRoom(id);
         setRoomId(id);
         setNames(roomNames);
