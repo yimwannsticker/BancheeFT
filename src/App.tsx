@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { PersonKey, RoomNames } from './types';
 import { getOrCreateRoom } from './lib/api';
-import { generateRoomId, getLastRoomId, getRoomIdFromUrl, setLastRoomId, setRoomIdInUrl } from './lib/room';
+import { generateRoomId, getLastRoomId, getRoomIdFromUrl, setLastRoomId, setManifestStartUrl, setRoomIdInUrl } from './lib/room';
 import { RoomProvider, loadStoredIdentity } from './context/RoomContext';
 import { IdentityPickerPage } from './pages/IdentityPickerPage';
 import { MainApp } from './MainApp';
@@ -34,6 +34,7 @@ export default function App() {
           setRoomIdInUrl(id);
         }
         setLastRoomId(id);
+        setManifestStartUrl(id);
         const roomNames = await getOrCreateRoom(id);
         setRoomId(id);
         setNames(roomNames);

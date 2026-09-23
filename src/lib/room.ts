@@ -44,6 +44,36 @@ export function setLastRoomId(roomId: string): void {
   }
 }
 
+/**
+ * ทำให้ manifest ของ PWA ชี้ไปที่ห้องปัจจุบันโดยตรง (start_url มี ?room= ติดไปด้วย)
+ * เพื่อให้ตอนกด "เพิ่มไปยังหน้าจอโฮม" ไอคอนที่ได้เปิดเข้าห้องนี้เสมอ
+ * (มือถือบางรุ่น เช่น iPhone เก็บ localStorage ของแอพที่ติดตั้งแยกจากเบราว์เซอร์
+ *  การจำห้องด้วย localStorage อย่างเดียวจึงไม่พอ ต้องฝัง room ไว้ใน manifest เองด้วย)
+ */
+export async function setManifestStartUrl(roomId: string): Promise<void> {
+  try {
+    const linkEl = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+    const manifestHref = linkEl?.getAttribute('href') ?? '/manifest.webmanifest';
+    const res = await fetch(manifestHref);
+    const manifest = await res.json();
+
+    const shareUrl = new URL(roomShareUrl(roomId));
+    manifest.start_url = shareUrl.pathname + shareUrl.search;
+
+    const blobUrl = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }));
+    if (linkEl) {
+      linkEl.setAttribute('href', blobUrl);
+    } else {
+      const newLink = document.createElement('link');
+      newLink.rel = 'manifest';
+      newLink.setAttribute('href', blobUrl);
+      document.head.appendChild(newLink);
+    }
+  } catch {
+    // เบราว์เซอร์บางตัวอาจไม่รองรับ manifest แบบไดนามิก — ไม่ร้ายแรง ยังใช้งานเว็บได้ปกติ
+  }
+}
+
 function identityStorageKey(roomId: string): string {
   return `bancheeft:identity:${roomId}`;
 }
