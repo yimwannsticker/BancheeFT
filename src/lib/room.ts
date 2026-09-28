@@ -45,33 +45,72 @@ export function setLastRoomId(roomId: string): void {
 }
 
 /**
- * ทำให้ manifest ของ PWA ชี้ไปที่ห้องปัจจุบันโดยตรง (start_url มี ?room= ติดไปด้วย)
- * เพื่อให้ตอนกด "เพิ่มไปยังหน้าจอโฮม" ไอคอนที่ได้เปิดเข้าห้องนี้เสมอ
- * (มือถือบางรุ่น เช่น iPhone เก็บ localStorage ของแอพที่ติดตั้งแยกจากเบราว์เซอร์
- *  การจำห้องด้วย localStorage อย่างเดียวจึงไม่พอ ต้องฝัง room ไว้ใน manifest เองด้วย)
+ * ค่า manifest เดียวกับที่ตั้งไว้ใน vite.config.ts (VitePWA manifest) — ถ้าแก้ตรงนั้น
+ * ต้องแก้ตรงนี้ให้ตรงกันด้วย เขียนซ้ำไว้ตรงนี้เพื่อสร้าง manifest แบบ sync ได้ทันที
+ * ไม่ต้องรอ fetch ไฟล์ (ตัด race condition ตอนกด "เพิ่มไปยังหน้าจอโฮม" เร็วเกินไป)
  */
-export async function setManifestStartUrl(roomId: string): Promise<void> {
+const MANIFEST_BASE = {
+  name: 'BancheeFirstTeui',
+  short_name: 'BancheeFirstTeui',
+  description: 'บันทึกว่าใครจ่ายอะไรแทนกัน และสรุปยอดปลายเดือน',
+  theme_color: '#9333ea',
+  background_color: '#faf5ff',
+  display: 'standalone',
+  icons: [
+    { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+    { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+    { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+  ],
+};
+
+/**
+ * ทำให้ manifest ของ PWA ชี้ไปที่ห้องปัจจุบันโดยตรง (start_url มี ?room= ติดไปด้วย)
+ * เพื่อให้ตอนกด "เพิ่มไปยังหน้าจอโฮม" ไอคอนที่ได้เปิดเข้าห้องนี้เสมอ ทำแบบ synchronous
+ * ล้วนๆ (ไม่ fetch ไฟล์ใดๆ) เพราะถ้าทำแบบ async จะมีช่วงเสี้ยววินาทีที่ manifest
+ * ยังเป็นค่าเดิมอยู่ ถ้าผู้ใช้กด "เพิ่มไปยังหน้าจอโฮม" เร็วเกินไปจะจับค่าเก่าไปแทน
+ */
+export function setManifestStartUrlSync(roomId: string): void {
   try {
-    const linkEl = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
-    const manifestHref = linkEl?.getAttribute('href') ?? '/manifest.webmanifest';
-    const res = await fetch(manifestHref);
-    const manifest = await res.json();
-
     const shareUrl = new URL(roomShareUrl(roomId));
-    manifest.start_url = shareUrl.pathname + shareUrl.search;
-
+    const manifest = { ...MANIFEST_BASE, start_url: shareUrl.pathname + shareUrl.search };
     const blobUrl = URL.createObjectURL(new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' }));
-    if (linkEl) {
-      linkEl.setAttribute('href', blobUrl);
-    } else {
-      const newLink = document.createElement('link');
-      newLink.rel = 'manifest';
-      newLink.setAttribute('href', blobUrl);
-      document.head.appendChild(newLink);
+
+    let link = document.querySelector<HTMLLinkElement>('link[rel="manifest"]');
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'manifest';
+      document.head.appendChild(link);
     }
+    link.setAttribute('href', blobUrl);
   } catch {
     // เบราว์เซอร์บางตัวอาจไม่รองรับ manifest แบบไดนามิก — ไม่ร้ายแรง ยังใช้งานเว็บได้ปกติ
   }
+}
+
+/**
+ * หาว่าตอนนี้ควรใช้ห้องไหน (จาก ?room= ในลิงก์ / ห้องล่าสุดที่เครื่องนี้เคยเข้า / สร้างใหม่)
+ * แล้ว "ปักหมุด" ทันที: อัปเดต URL, จำไว้ใน localStorage, และฝังลง manifest แบบ sync
+ * เรียกครั้งเดียวตอนแอพเริ่มทำงาน ก่อน React จะ render อะไรทั้งนั้น
+ */
+export function resolveAndPinRoomId(): { roomId: string; isNewRoom: boolean } {
+  let roomId = getRoomIdFromUrl();
+  let isNewRoom = false;
+
+  if (!roomId) {
+    const resumed = getLastRoomId();
+    if (resumed) {
+      roomId = resumed;
+    } else {
+      roomId = generateRoomId();
+      isNewRoom = true;
+    }
+    setRoomIdInUrl(roomId);
+  }
+
+  setLastRoomId(roomId);
+  setManifestStartUrlSync(roomId);
+
+  return { roomId, isNewRoom };
 }
 
 function identityStorageKey(roomId: string): string {

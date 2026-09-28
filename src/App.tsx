@@ -1,14 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { PersonKey, RoomNames } from './types';
 import { getOrCreateRoom } from './lib/api';
-import { generateRoomId, getLastRoomId, getRoomIdFromUrl, setLastRoomId, setManifestStartUrl, setRoomIdInUrl } from './lib/room';
-import { RoomProvider, loadStoredIdentity } from './context/RoomContext';
+import { loadStoredIdentity, RoomProvider } from './context/RoomContext';
 import { IdentityPickerPage } from './pages/IdentityPickerPage';
 import { MainApp } from './MainApp';
 
 type Phase = 'loading' | 'error' | 'pick-identity' | 'ready';
 
-export default function App() {
+export default function App({ initialRoomId, initialIsNewRoom }: { initialRoomId: string; initialIsNewRoom: boolean }) {
   const [phase, setPhase] = useState<Phase>('loading');
   const [roomId, setRoomId] = useState<string | null>(null);
   const [names, setNames] = useState<RoomNames | null>(null);
@@ -19,28 +18,12 @@ export default function App() {
   useEffect(() => {
     (async () => {
       try {
-        let id = getRoomIdFromUrl();
-        let freshlyCreated = false;
-        if (!id) {
-          // เปิดแอพโดยไม่มี ?room= ต่อท้าย (เช่น เปิดผ่านไอคอนที่ติดตั้งไว้)
-          // ให้กลับเข้าห้องล่าสุดที่เครื่องนี้เคยเข้าก่อน แทนที่จะสร้างห้องใหม่ทุกครั้ง
-          const resumed = getLastRoomId();
-          if (resumed) {
-            id = resumed;
-          } else {
-            id = generateRoomId();
-            freshlyCreated = true;
-          }
-          setRoomIdInUrl(id);
-        }
-        setLastRoomId(id);
-        setManifestStartUrl(id);
-        const roomNames = await getOrCreateRoom(id);
-        setRoomId(id);
+        const roomNames = await getOrCreateRoom(initialRoomId);
+        setRoomId(initialRoomId);
         setNames(roomNames);
-        setIsNewRoom(freshlyCreated);
+        setIsNewRoom(initialIsNewRoom);
 
-        const identity = loadStoredIdentity(id);
+        const identity = loadStoredIdentity(initialRoomId);
         if (identity) {
           setSelfKey(identity);
           setPhase('ready');
@@ -59,7 +42,7 @@ export default function App() {
         setPhase('error');
       }
     })();
-  }, []);
+  }, [initialRoomId, initialIsNewRoom]);
 
   if (phase === 'loading') {
     return (
