@@ -73,6 +73,10 @@ export function SettingsPage() {
       </section>
 
       <TrashSection />
+
+      <p className="mt-4 text-center text-[10px] text-gray-300">
+        build: {new Date(__BUILD_TIME__).toLocaleString('th-TH')}
+      </p>
     </div>
   );
 }
