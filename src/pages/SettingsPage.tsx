@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { useRoom } from '../context/RoomContext';
-import { roomShareUrl } from '../lib/room';
 import { TrashSection } from '../components/TrashSection';
 import type { PersonKey } from '../types';
 
 export function SettingsPage() {
-  const { roomId, names, selfKey, updateNames, switchIdentity } = useRoom();
+  const { names, selfKey, updateNames, switchIdentity } = useRoom();
   const [nameA, setNameA] = useState(names.a);
   const [nameB, setNameB] = useState(names.b);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-  const [copied, setCopied] = useState(false);
 
-  const link = roomShareUrl(roomId);
   const dirty = nameA !== names.a || nameB !== names.b;
 
   const save = async () => {
@@ -24,16 +21,6 @@ export function SettingsPage() {
       setTimeout(() => setSaved(false), 2000);
     } finally {
       setSaving(false);
-    }
-  };
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      window.prompt('คัดลอกลิงก์นี้แล้วส่งให้อีกคน', link);
     }
   };
 
@@ -83,15 +70,6 @@ export function SettingsPage() {
             </button>
           ))}
         </div>
-      </section>
-
-      <section className="mt-4 rounded-xl bg-white p-4 shadow-sm">
-        <p className="mb-2 text-sm font-semibold text-gray-600">ลิงก์เข้าห้อง</p>
-        <p className="mb-3 break-all rounded-lg bg-gray-50 p-2 text-xs text-gray-500">{link}</p>
-        <button onClick={copyLink} className="w-full rounded-lg bg-gray-100 py-2 text-sm font-semibold text-gray-600">
-          {copied ? 'คัดลอกแล้ว ✓' : 'คัดลอกลิงก์'}
-        </button>
-        <p className="mt-2 text-xs text-gray-400">ส่งลิงก์นี้ให้อีกคนเพื่อเข้าห้องเดียวกันบนมือถืออีกเครื่อง</p>
       </section>
 
       <TrashSection />

@@ -1,29 +1,26 @@
 import { useEffect, useState } from 'react';
 import type { PersonKey, RoomNames } from './types';
 import { getOrCreateRoom } from './lib/api';
-import { loadStoredIdentity, RoomProvider } from './context/RoomContext';
+import { ROOM_ID, getDeviceIdentity, setDeviceIdentity } from './lib/room';
+import { RoomProvider } from './context/RoomContext';
 import { IdentityPickerPage } from './pages/IdentityPickerPage';
 import { MainApp } from './MainApp';
 
 type Phase = 'loading' | 'error' | 'pick-identity' | 'ready';
 
-export default function App({ initialRoomId, initialIsNewRoom }: { initialRoomId: string; initialIsNewRoom: boolean }) {
+export default function App() {
   const [phase, setPhase] = useState<Phase>('loading');
-  const [roomId, setRoomId] = useState<string | null>(null);
   const [names, setNames] = useState<RoomNames | null>(null);
   const [selfKey, setSelfKey] = useState<PersonKey | null>(null);
-  const [isNewRoom, setIsNewRoom] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     (async () => {
       try {
-        const roomNames = await getOrCreateRoom(initialRoomId);
-        setRoomId(initialRoomId);
+        const roomNames = await getOrCreateRoom(ROOM_ID);
         setNames(roomNames);
-        setIsNewRoom(initialIsNewRoom);
 
-        const identity = loadStoredIdentity(initialRoomId);
+        const identity = getDeviceIdentity();
         if (identity) {
           setSelfKey(identity);
           setPhase('ready');
@@ -42,7 +39,7 @@ export default function App({ initialRoomId, initialIsNewRoom }: { initialRoomId
         setPhase('error');
       }
     })();
-  }, [initialRoomId, initialIsNewRoom]);
+  }, []);
 
   if (phase === 'loading') {
     return (
@@ -64,11 +61,12 @@ export default function App({ initialRoomId, initialIsNewRoom }: { initialRoomId
     );
   }
 
-  if (phase === 'pick-identity' && roomId && names) {
+  if (phase === 'pick-identity' && names) {
     return (
       <IdentityPickerPage
         names={names}
         onPick={(key) => {
+          setDeviceIdentity(key);
           setSelfKey(key);
           setPhase('ready');
         }}
@@ -76,10 +74,10 @@ export default function App({ initialRoomId, initialIsNewRoom }: { initialRoomId
     );
   }
 
-  if (phase === 'ready' && roomId && names && selfKey) {
+  if (phase === 'ready' && names && selfKey) {
     return (
-      <RoomProvider roomId={roomId} initialNames={names} initialSelfKey={selfKey}>
-        <MainApp showShareBannerInitially={isNewRoom} />
+      <RoomProvider roomId={ROOM_ID} initialNames={names} initialSelfKey={selfKey}>
+        <MainApp />
       </RoomProvider>
     );
   }

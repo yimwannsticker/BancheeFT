@@ -2,7 +2,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 import type { ReactNode } from 'react';
 import type { DraftEntry, Entry, PersonKey, RoomNames } from '../types';
 import * as api from '../lib/api';
-import { getDeviceIdentity, setDeviceIdentity } from '../lib/room';
+import { setDeviceIdentity } from '../lib/room';
 
 interface RoomContextValue {
   roomId: string;
@@ -108,13 +108,10 @@ export function RoomProvider({
     [roomId],
   );
 
-  const switchIdentity = useCallback(
-    (key: PersonKey) => {
-      setDeviceIdentity(roomId, key);
-      setSelfKey(key);
-    },
-    [roomId],
-  );
+  const switchIdentity = useCallback((key: PersonKey) => {
+    setDeviceIdentity(key);
+    setSelfKey(key);
+  }, []);
 
   const value = useMemo<RoomContextValue>(
     () => ({
@@ -141,8 +138,4 @@ export function useRoom(): RoomContextValue {
   const ctx = useContext(RoomContext);
   if (!ctx) throw new Error('useRoom ต้องถูกเรียกภายใน RoomProvider');
   return ctx;
-}
-
-export function loadStoredIdentity(roomId: string): PersonKey | null {
-  return getDeviceIdentity(roomId);
 }
