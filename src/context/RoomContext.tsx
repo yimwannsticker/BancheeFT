@@ -14,6 +14,7 @@ interface RoomContextValue {
   addEntry: (draft: DraftEntry) => Promise<Entry>;
   editEntry: (id: string, patch: Partial<DraftEntry>) => Promise<void>;
   deleteEntry: (id: string) => Promise<void>;
+  restoreEntry: (id: string) => Promise<void>;
   updateNames: (names: RoomNames) => Promise<void>;
   switchIdentity: (key: PersonKey) => void;
 }
@@ -56,6 +57,11 @@ export function RoomProvider({
   }, [roomId, refresh]);
 
   useEffect(() => {
+    // ลบรายการในถังขยะที่เกิน 7 วันทิ้งถาวร ทำแบบ best-effort ตอนเปิดแอพ ไม่ต้องรอผลลัพธ์
+    api.purgeExpiredDeleted(roomId).catch(() => {});
+  }, [roomId]);
+
+  useEffect(() => {
     document.documentElement.setAttribute('data-theme', selfKey);
     const themeColor = selfKey === 'a' ? '#eab308' : '#9333ea';
     document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColor);
@@ -86,6 +92,14 @@ export function RoomProvider({
     [refresh],
   );
 
+  const restoreEntry = useCallback(
+    async (id: string) => {
+      await api.restoreEntry(id);
+      await refresh();
+    },
+    [refresh],
+  );
+
   const updateNames = useCallback(
     async (next: RoomNames) => {
       await api.updateRoomNames(roomId, next);
@@ -103,8 +117,21 @@ export function RoomProvider({
   );
 
   const value = useMemo<RoomContextValue>(
-    () => ({ roomId, names, selfKey, entries, loading, error, addEntry, editEntry, deleteEntry, updateNames, switchIdentity }),
-    [roomId, names, selfKey, entries, loading, error, addEntry, editEntry, deleteEntry, updateNames, switchIdentity],
+    () => ({
+      roomId,
+      names,
+      selfKey,
+      entries,
+      loading,
+      error,
+      addEntry,
+      editEntry,
+      deleteEntry,
+      restoreEntry,
+      updateNames,
+      switchIdentity,
+    }),
+    [roomId, names, selfKey, entries, loading, error, addEntry, editEntry, deleteEntry, restoreEntry, updateNames, switchIdentity],
   );
 
   return <RoomContext.Provider value={value}>{children}</RoomContext.Provider>;

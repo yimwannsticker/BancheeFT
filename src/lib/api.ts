@@ -105,6 +105,38 @@ export async function softDeleteEntry(id: string): Promise<void> {
   if (error) throw error;
 }
 
+const TRASH_RETENTION_DAYS = 7;
+
+/** รายการที่ถูกลบไปแล้วแต่ยังอยู่ในช่วงเก็บ (ยังไม่เกิน 7 วัน) เรียงลบล่าสุดก่อน */
+export async function fetchDeletedEntries(roomId: string): Promise<Entry[]> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - TRASH_RETENTION_DAYS);
+
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .eq('room_id', roomId)
+    .not('deleted_at', 'is', null)
+    .gte('deleted_at', cutoff.toISOString())
+    .order('deleted_at', { ascending: false });
+  if (error) throw error;
+  return (data as EntryRow[]).map(rowToEntry);
+}
+
+/** กู้คืนรายการที่ลบไปแล้ว (ยังไม่เกิน 7 วัน) */
+export async function restoreEntry(id: string): Promise<void> {
+  const { error } = await supabase.from('entries').update({ deleted_at: null }).eq('id', id);
+  if (error) throw error;
+}
+
+/** ลบรายการที่อยู่ในถังขยะเกิน 7 วันทิ้งถาวร เรียกตอนเปิดแอพ (best-effort ไม่ต้องรอผลลัพธ์) */
+export async function purgeExpiredDeleted(roomId: string): Promise<void> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - TRASH_RETENTION_DAYS);
+
+  await supabase.from('entries').delete().eq('room_id', roomId).not('deleted_at', 'is', null).lt('deleted_at', cutoff.toISOString());
+}
+
 export function subscribeToEntries(roomId: string, onChange: () => void): () => void {
   const channel = supabase
     .channel(`room-entries-${roomId}`)

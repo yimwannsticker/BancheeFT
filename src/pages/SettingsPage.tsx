@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRoom } from '../context/RoomContext';
 import { roomShareUrl } from '../lib/room';
+import { TrashSection } from '../components/TrashSection';
 import type { PersonKey } from '../types';
 
 export function SettingsPage() {
@@ -92,6 +93,8 @@ export function SettingsPage() {
         </button>
         <p className="mt-2 text-xs text-gray-400">ส่งลิงก์นี้ให้อีกคนเพื่อเข้าห้องเดียวกันบนมือถืออีกเครื่อง</p>
       </section>
+
+      <TrashSection />
     </div>
   );
 }
